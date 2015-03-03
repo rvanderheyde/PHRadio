@@ -1,0 +1,19 @@
+{
+  "name": "PHRadio",
+  "version": "1.0.0",
+  "description": "A power hour radio",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rvanderheyde/PHRadio.git"
+  },
+  "author": "Deborah and Radmer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rvanderheyde/PHRadio/issues"
+  },
+  "homepage": "https://github.com/rvanderheyde/PHRadio"
+}
