@@ -7,14 +7,21 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
+var SpotifyStrategy = require('passport-spotify').Strategy;
+
+var index = require('./routes/index');
+var auth = require('./routes/auth');
 
 
 var app = express();
 var mongoURI = process.env.MONGOURI || "mongodb://localhost/test";
 var PORT = process.env.PORT || 3000;
-var CLIENTID= process.env.CLIENTID || require('./oauth.js').facebook.clientID;
-var CLIENTSECRET = process.env.CLIENTSECRET || require('./oauth.js').facebook.clientSecret;
-var CALLBACKURL = process.env.CALLBACKURL || require('./oauth.js').facebook.callbackURL;
+var CLIENTIDFB = process.env.CLIENTIDFB || require('./oauth.js').facebook.clientID;
+var CLIENTSECRETFB = process.env.CLIENTSECRETFB || require('./oauth.js').facebook.clientSecret;
+var CALLBACKURLFB = process.env.CALLBACKURLFB || require('./oauth.js').facebook.callbackURL;
+var CLIENTIDSPOT = process.env.CLIENTIDSPOT || require('./oauth.js').spotify.clientID;
+var CLIENTSECRETSPOT = process.env.CLIENTSECRETSPOT || require('./oauth.js').spotify.clientSecret;
+var CALLBACKURLSPOT = process.env.CALLBACKURLSPOT || require('./oauth.js').spotify.callbackURL;
 
 mongoose.connect(mongoURI);
 
@@ -26,15 +33,27 @@ done(null, obj);
 });
 
 passport.use(new FacebookStrategy({
- clientID: CLIENTID,
- clientSecret: CLIENTSECRET,
- callbackURL: CALLBACKURL
+ clientID: CLIENTIDFB,
+ clientSecret: CLIENTSECRETFB,
+ callbackURL: CALLBACKURLFB
 }, 
 function(accessToken, refreshToken, profile, done) {
  process.nextTick(function () {
    return done(null, profile);
  });
 }
+));
+
+passport.use(new SpotifyStrategy({
+    clientID: CLIENTIDSPOT,
+    clientSecret: CLIENTSECRETSPOT,
+    callbackURL: CALLBACKURLSPOT
+  },
+  function(accessToken, refreshToken, profile, done) {
+    User.findOrCreate({ spotifyId: profile.id }, function (err, user) {
+      return done(err, user);
+    });
+  }
 ));
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -52,7 +71,9 @@ app.use(passport.session());
 
 app.get('/', index.indexRender);
 app.get('/auth/facebook', passport.authenticate('facebook'), auth.fbAuth);
-app.get('/auth/facebook/callback',passport.authenticate('facebook', { failureRedirect: '/login' }), auth.fbAuthCallback);
+app.get('/auth/facebook/callback',passport.authenticate('facebook', { failureRedirect: '/' }), auth.fbAuthCallback);
+app.get('/auth/spotify', passport.authenticate('spotify', {scope: ['user-read-email', 'user-read-private'] }), auth.fbAuth);
+app.get('/auth/spotify/callback',passport.authenticate('spotify', { failureRedirect: '/' }), auth.fbAuthCallback);
 
 app.listen(PORT, function() {
   console.log("Application running on port:", PORT);
