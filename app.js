@@ -74,6 +74,8 @@ app.get('/auth/facebook', passport.authenticate('facebook'), auth.fbAuth);
 app.get('/auth/facebook/callback',passport.authenticate('facebook', { failureRedirect: '/' }), auth.fbAuthCallback);
 app.get('/auth/spotify', passport.authenticate('spotify', {scope: ['user-read-email', 'user-read-private'] }), auth.fbAuth);
 app.get('/auth/spotify/callback',passport.authenticate('spotify', { failureRedirect: '/' }), auth.fbAuthCallback);
+app.get('/session/username', auth.getUsername)
+app.post('/session/end', auth.loggingOut)
 
 app.listen(PORT, function() {
   console.log("Application running on port:", PORT);

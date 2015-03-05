@@ -26,4 +26,31 @@ routes.fbAuthCallback = function(req, res){
   }); 
 };
 
+routes.getUsername = function(req, res){
+  //find user from session
+  if (emptyObjTest(req.session.passport) === true){
+    res.send('error');
+  } else {
+    var username = req.session.passport.user.displayName;
+    var obj = { userName: username};
+    if (!username){
+      res.send('No User');
+    } else {
+      res.send(obj);
+    }
+  }
+};
+
+function emptyObjTest(obj){
+  return Object.keys(obj).length === 0;
+};
+
+routes.loggingOut = function(req, res) {
+  req.session.passport = {};
+  req.session.userid = '';
+  
+  // send something to client to change client
+  res.send('logout');
+};
+
 module.exports = routes;
