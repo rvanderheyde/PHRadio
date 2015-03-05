@@ -49,6 +49,11 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+
+app.get('/', index.indexRender);
+app.get('/auth/facebook', passport.authenticate('facebook'), auth.fbAuth);
+app.get('/auth/facebook/callback',passport.authenticate('facebook', { failureRedirect: '/login' }), auth.fbAuthCallback);
+
 app.listen(PORT, function() {
   console.log("Application running on port:", PORT);
 });
