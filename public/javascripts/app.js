@@ -1,5 +1,5 @@
 (function(){
-  var app = angular.module("wiki", ['ngRoute', 'ngCookies', 'nav-directives']);
+  var app = angular.module("PHR", ['ngRoute', 'ngCookies', 'nav-directives']);
   //Router to handle the views
   app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider){
     $routeProvider.when('/pages/:pagename', {

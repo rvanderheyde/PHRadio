@@ -8,7 +8,7 @@ var session = require('express-session');
 var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
 var SpotifyStrategy = require('passport-spotify').Strategy;
-
+var User = require('./models/user');
 var index = require('./routes/index');
 var auth = require('./routes/auth');
 
@@ -50,8 +50,23 @@ passport.use(new SpotifyStrategy({
     callbackURL: CALLBACKURLSPOT
   },
   function(accessToken, refreshToken, profile, done) {
-    User.findOrCreate({ spotifyId: profile.id }, function (err, user) {
-      return done(err, user);
+    // process.nextTick(function (err, user) {
+    //   return done(err, user);
+    console.log(profile.displayName)
+    User.findOne({ spotifyId: profile.id }, function (err, user) {
+      if (user) { 
+        return done(err, user); 
+      } else {
+        var newUser = User({PHRname: profile.displayName , spotifyId: profile.id, liked: [] })
+        newUser.save(function (err) {
+          if (err) {
+              console.log('cant save new user');
+              res.status(500);
+          } else {
+            return done(err, user);
+          }
+        });
+      }
     });
   }
 ));
@@ -73,7 +88,7 @@ app.get('/', index.indexRender);
 app.get('/auth/facebook', passport.authenticate('facebook'), auth.fbAuth);
 app.get('/auth/facebook/callback',passport.authenticate('facebook', { failureRedirect: '/' }), auth.fbAuthCallback);
 app.get('/auth/spotify', passport.authenticate('spotify', {scope: ['user-read-email', 'user-read-private'] }), auth.fbAuth);
-app.get('/auth/spotify/callback',passport.authenticate('spotify', { failureRedirect: '/' }), auth.fbAuthCallback);
+app.get('/auth/spotify/callback',passport.authenticate('spotify', { scope: ['user-read-email', 'user-read-private'], failureRedirect: '/' }), auth.spotAuthCallback);
 app.get('/session/username', auth.getUsername)
 app.post('/session/end', auth.loggingOut)
 

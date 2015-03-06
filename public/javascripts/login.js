@@ -7,13 +7,14 @@
 			templateUrl: '../templates/nav.html',
 			controller: function(){
 				var user = this;
-				this.username = $cookieStore.get('username');
+				this.username = $cookieStore.get('PHRname');
 
 				$http.get('/session/username').success(function(data){
 					//bake the cookie with username from server to control view.
 					if (data !== 'error'){
+						console.log(data)
 						var username = data.userName;
-						$cookieStore.put('username', username);
+						$cookieStore.put('PHRname', username);
 						user.username = username;
 					}
 				}).error(function(data){
@@ -32,10 +33,10 @@
 
 				this.eatCookie = function(){
 					//eat the cookie!!(destroys it)
-					var username = $cookieStore.get('username');
+					var username = $cookieStore.get('PHRname');
 					$http.post('/session/end').success(function(data, status, headers, config){
 						console.log(username);
-						$cookieStore.remove('username');
+						$cookieStore.remove('PHRname');
 						user.username = '';
 					}).error(function(data,status,headers,config){
 						alert("There was an err loggin out")
