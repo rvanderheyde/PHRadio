@@ -54,7 +54,6 @@ function emptyObjTest(obj){
 
 routes.loggingOut = function(req, res) {
   req.session.passport = {};
-  req.session.userid = '';
   
   // send something to client to change client
   res.send('logout');
