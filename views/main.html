@@ -20,7 +20,13 @@
   </head>
   <body>
   	<nav-bar></nav-bar>
-    <!-- <iframe src="https://embed.spotify.com/?uri=spotify:trackset:FUCK_SPOTIFY:5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe" frameborder="0" allowtransparency="true"></iframe> -->
+    <div ng-controller="soundTest as sound">
+      <p>Test Sound</p>
+      <audio controls>
+        <source src="{{sound.url}}" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
     <div ng-view></div>
   </body>
 </html>

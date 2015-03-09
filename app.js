@@ -128,7 +128,11 @@ app.get('/auth/soundcloud/callback',
   });
 app.get('/session/username', auth.getUsername);
 app.post('/session/end', auth.loggingOut);
-app.get('/user/:username', profile.getData)
+app.get('/user/:username', profile.getData);
+//for testing only
+app.get('/secret/secret', function(req, res){
+  res.send({secret: SOUNDCLOUD_CLIENT_ID})
+});
 
 app.listen(PORT, function() {
   console.log("Application running on port:", PORT);

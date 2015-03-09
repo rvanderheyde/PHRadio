@@ -16,7 +16,7 @@
   }]);  
 
   //Controller for the profile page
-  app.controller('UserController', ['$http', function($http){
+  app.controller('UserController', ['$http','$location', function($http, $location){
     var stuff = this;
     stuff.page = {};
     var path = $location.path();
@@ -26,5 +26,17 @@
     }).error(function(data, status){ console.log(status); });
   }]);
 
+  app.controller('soundTest', ['$http', function($http){
+    var page = this;
+    this.url = '';
+    $http.get('/secret/secret').success(function(data, status){
+      var path = 'http://api.soundcloud.com/tracks/13158665.json?client_id=' + data.secret;
+      $http.get(path).success(function(data, status){
+        page.url = data.stream_url
+        console.log(page.url)
+      }).error(function(data,status){ console.log(status); })
+    }).error(function(data,status){ console.log(status); });
+      
+  }]);
 
 })();
