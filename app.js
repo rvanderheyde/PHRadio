@@ -9,9 +9,12 @@ var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
 var SpotifyStrategy = require('passport-spotify').Strategy;
 var SoundCloudStrategy = require('passport-soundcloud').Strategy;
+
 var User = require('./models/user');
+
 var index = require('./routes/index');
 var auth = require('./routes/auth');
+var profile = require('./routes/profile');
 
 
 var app = express();

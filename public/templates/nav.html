@@ -1,8 +1,4 @@
 <nav class="top-bar">
-	<ul class="title-area">
-		<li class="name"></li>
-		<li class="toggle-topbar menu-icon"><a href = "#"><span>Menu</span></a></li>
-	</ul>
 	<section class="top-bar-section">
 		<ul class="left">
 			<li ng-show="nav.checkHome()"><a class="button" href="/">Home</a></li>
@@ -11,7 +7,7 @@
 			<li ng-hide="nav.soundcloud"><a class="button" href="/auth/soundcloud" target="_self">SoundCloud</a></li>
 		</ul>
 	    <ul class="right">
-	      <li ng-show="nav.username"><button>{{nav.username}}</button></li>
+	      <li ng-show="nav.username"><a class="button" href="{{'/user/' + nav.username}}">{{nav.username}}</a></li>
 	    </ul>
 	</section>
 </nav>

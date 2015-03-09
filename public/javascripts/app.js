@@ -17,7 +17,13 @@
 
   //Controller for the profile page
   app.controller('UserController', ['$http', function($http){
-
+    var stuff = this;
+    stuff.page = {};
+    var path = $location.path();
+    //get the data to populate the page
+    $http.get(path).success(function(data, status){
+      stuff.page = data;
+    }).error(function(data, status){ console.log(status); });
   }]);
 
 
