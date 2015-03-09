@@ -123,8 +123,9 @@ app.get('/auth/soundcloud/callback',
   function(req, res) {
     res.redirect('/');
   });
-app.get('/session/username', auth.getUsername)
-app.post('/session/end', auth.loggingOut)
+app.get('/session/username', auth.getUsername);
+app.post('/session/end', auth.loggingOut);
+app.get('/user/:username', profile.getData)
 
 app.listen(PORT, function() {
   console.log("Application running on port:", PORT);
