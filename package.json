@@ -25,6 +25,7 @@
     "morgan": "^1.5.1",
     "passport": "^0.2.1",
     "passport-facebook": "^2.0.0",
+    "passport-soundcloud": "^0.1.2",
     "passport-spotify": "^0.2.0"
   }
 }

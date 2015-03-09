@@ -39,7 +39,8 @@ routes.getUsername = function(req, res){
     res.send('error');
   } else {
     var username = req.session.passport.user.PHRname;
-    var obj = { userName: username};
+    var soundcloud = req.session.passport.user.scId
+    var obj = { userName: username, soundcloud: soundcloud};
     if (!username){
       res.send('No User');
     } else {
