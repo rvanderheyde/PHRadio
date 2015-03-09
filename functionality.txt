@@ -1,3 +1,5 @@
 Radio station of 1 minute songs
 Users comment on songs and can suggest new ones
 counter for how many songs have gone by 
+
+Note: Spotify will open up in background.
