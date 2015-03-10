@@ -11,8 +11,7 @@ exports.getData = function(req, res){
 			res.send(data);
 		}
 	});
-	
-
+		
 };
 
 module.exports = exports;
