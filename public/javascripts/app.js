@@ -26,16 +26,23 @@
     }).error(function(data, status){ console.log(status); });
   }]);
 
-  app.controller('soundTest', ['$http', function($http){
+  app.controller('soundTest', ['$http', '$sce', function($http, $sce){
     var page = this;
     this.url = '';
+    var testUrl = 'https://soundcloud.com/simply-seema/up-up-away';
     $http.get('/secret/secret').success(function(data, status){
-      var path = 'http://api.soundcloud.com/tracks/13158665.json?client_id=' + data.secret;
-      $http.get(path).success(function(data, status){
-        page.url = data.stream_url
+      var resolvePath = 'http://api.soundcloud.com/resolve.json?url=http://soundcloud.com/matas/hobnotropic&client_id=' + data.secret;
+      // var path = 'http://api.soundcloud.com/tracks/13158677.json?client_id=' + data.secret;
+      $http.get(resolvePath).success(function(data,status){
+      // $http.get(path).success(function(data, status){
+        page.url = data.stream_url;
         console.log(page.url)
       }).error(function(data,status){ console.log(status); })
     }).error(function(data,status){ console.log(status); });
+
+    this.trustSrc = function(src) {
+      return $sce.trustAsResourceUrl(src);
+    }
       
   }]);
 

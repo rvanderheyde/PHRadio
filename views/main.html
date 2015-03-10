@@ -22,9 +22,7 @@
   	<nav-bar></nav-bar>
     <div ng-controller="soundTest as sound">
       <p>Test Sound</p>
-      <audio controls>
-        <source src="{{sound.url}}" type="audio/mpeg">
-        Your browser does not support the audio element.
+      <audio controls data-ng-src="{{sound.trustSrc(sound.url)}}">
       </audio>
     </div>
     <div ng-view></div>
