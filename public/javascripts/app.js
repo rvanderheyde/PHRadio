@@ -31,12 +31,13 @@
     this.url = '';
     var testUrl = 'https://soundcloud.com/simply-seema/up-up-away';
     $http.get('/secret/secret').success(function(data, status){
-      var resolvePath = 'http://api.soundcloud.com/resolve.json?url=http://soundcloud.com/matas/hobnotropic&client_id=' + data.secret;
+      var resolvePath = 'http://api.soundcloud.com/resolve.json?url=https://soundcloud.com/simply-seema/up-up-away&client_id=' + data.secret;
+      var secret = data.secret;
       console.log(resolvePath);
       // var path = 'http://api.soundcloud.com/tracks/13158677.json?client_id=' + data.secret;
       $http.get(resolvePath).success(function(data,status){
       // $http.get(path).success(function(data, status){
-        page.url = data.stream_url;
+        page.url = data.stream_url+'?client_id='+secret;
         console.log(page.url)
       }).error(function(data,status){ console.log(status); })
     }).error(function(data,status){ console.log(status); });
