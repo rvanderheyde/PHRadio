@@ -32,6 +32,7 @@
     var testUrl = 'https://soundcloud.com/simply-seema/up-up-away';
     $http.get('/secret/secret').success(function(data, status){
       var resolvePath = 'http://api.soundcloud.com/resolve.json?url=http://soundcloud.com/matas/hobnotropic&client_id=' + data.secret;
+      console.log(resolvePath);
       // var path = 'http://api.soundcloud.com/tracks/13158677.json?client_id=' + data.secret;
       $http.get(resolvePath).success(function(data,status){
       // $http.get(path).success(function(data, status){

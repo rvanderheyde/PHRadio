@@ -7,6 +7,7 @@ routes.fbAuth = function(req, res){
 
 routes.spotAuthCallback = function(req,res){
 	console.log('Spot returns ' + req.session.passport.user)
+  req.session.passport.user.scId = ''
 	res.redirect('/');
 };
 
