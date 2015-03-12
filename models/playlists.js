@@ -5,7 +5,8 @@ var playlistSchema = mongoose.Schema({
 	upvotes: Number,
 	dateAdded: Date,
 	img: String,
-	title: String
+	title: String,
+	_author: { type: Number, ref: 'User' }
 });
 
 var Playlist = mongoose.model('Playlist', playlistSchema);

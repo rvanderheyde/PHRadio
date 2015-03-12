@@ -5,7 +5,7 @@ var userSchema = mongoose.Schema({
 	spotifyId: String,
 	scId: String,
 	upvotes: Array,
-	comments: Array,
+	comments: [String],
 	playlists: Array
 });
 

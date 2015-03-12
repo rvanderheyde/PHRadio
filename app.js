@@ -11,18 +11,18 @@ var SpotifyStrategy = require('passport-spotify').Strategy;
 var SoundCloudStrategy = require('passport-soundcloud').Strategy;
 
 var User = require('./models/user');
+var Playlist = require('./models/playlists');
 
 var index = require('./routes/index');
 var auth = require('./routes/auth');
 var profile = require('./routes/profile');
+var playlists = require('./routes/playlists');
 
 
 var app = express();
 var mongoURI = process.env.MONGOURI || "mongodb://localhost/test";
 var PORT = process.env.PORT || 3000;
-var CLIENTIDFB = process.env.CLIENTIDFB || require('./oauth.js').facebook.clientID;
-var CLIENTSECRETFB = process.env.CLIENTSECRETFB || require('./oauth.js').facebook.clientSecret;
-var CALLBACKURLFB = process.env.CALLBACKURLFB || require('./oauth.js').facebook.callbackURL;
+
 var CLIENTIDSPOT = process.env.CLIENTIDSPOT || require('./oauth.js').spotify.clientID;
 var CLIENTSECRETSPOT = process.env.CLIENTSECRETSPOT || require('./oauth.js').spotify.clientSecret;
 var CALLBACKURLSPOT = process.env.CALLBACKURLSPOT || require('./oauth.js').spotify.callbackURL;
@@ -39,17 +39,7 @@ passport.deserializeUser(function(obj, done) {
 done(null, obj);
 });
 
-passport.use(new FacebookStrategy({
- clientID: CLIENTIDFB,
- clientSecret: CLIENTSECRETFB,
- callbackURL: CALLBACKURLFB
-}, 
-function(accessToken, refreshToken, profile, done) {
- process.nextTick(function () {
-   return done(null, profile);
- });
-}
-));
+
 
 passport.use(new SpotifyStrategy({
     clientID: CLIENTIDSPOT,
@@ -115,7 +105,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
+// Main route
 app.get('/', index.indexRender);
+
+// Authentication Routes
 app.get('/auth/facebook', passport.authenticate('facebook'), auth.fbAuth);
 app.get('/auth/facebook/callback',passport.authenticate('facebook', { failureRedirect: '/' }), auth.fbAuthCallback);
 app.get('/auth/spotify', passport.authenticate('spotify', {scope: ['user-read-email', 'user-read-private'] }), auth.fbAuth);
@@ -128,8 +121,17 @@ app.get('/auth/soundcloud/callback',
   });
 app.get('/session/username', auth.getUsername);
 app.post('/session/end', auth.loggingOut);
-app.get('/user/:username', profile.getData)
+app.get('/user/:username', profile.getData);
+
+// API routes
+app.get('/api/playlists', playlists.allPlaylists);
+app.get('/api/playlists/by/upvote', playlists.byUpvotes);
+app.post('/api/playlists/add', playlists.addPlaylist);
+app.post('/api/upvote', playlists.upvote);
+
 
 app.listen(PORT, function() {
   console.log("Application running on port:", PORT);
 });
+
+
