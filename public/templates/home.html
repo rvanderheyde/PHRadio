@@ -1,0 +1,10 @@
+<h1>Welcome to Redify</h1>
+Sort by: <a href="/#/">Date</a> <a href="/#/by/upvote">Popularity</a>
+<h5>Most Recent Playlists</h5>
+	<div ng-repeat="playlist in playlists">
+        	{{playlist.title}} by {{playlist._author}}
+        	Upvotes: {{playlist.upvotes}} ID: {{playlist.playlistId}}
+       <br>
+       <button type = "submit" ng-click="addUpvote(playlist)">Upvote</button>
+
+	</div>

@@ -5,8 +5,9 @@ var userSchema = mongoose.Schema({
 	spotifyId: String,
 	scId: String,
 	upvotes: Array,
-	comments: Array,
-	playlists: Array
+	comments: [String],
+	playlists: Array,
+	lastToken: String
 });
 
 var User = mongoose.model('User', userSchema);

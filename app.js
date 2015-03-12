@@ -11,18 +11,18 @@ var SpotifyStrategy = require('passport-spotify').Strategy;
 var SoundCloudStrategy = require('passport-soundcloud').Strategy;
 
 var User = require('./models/user');
+var Playlist = require('./models/playlists');
 
 var index = require('./routes/index');
 var auth = require('./routes/auth');
 var profile = require('./routes/profile');
+var playlists = require('./routes/playlists');
 
 
 var app = express();
 var mongoURI = process.env.MONGOURI || "mongodb://localhost/test";
 var PORT = process.env.PORT || 3000;
-var CLIENTIDFB = process.env.CLIENTIDFB || require('./oauth.js').facebook.clientID;
-var CLIENTSECRETFB = process.env.CLIENTSECRETFB || require('./oauth.js').facebook.clientSecret;
-var CALLBACKURLFB = process.env.CALLBACKURLFB || require('./oauth.js').facebook.callbackURL;
+
 var CLIENTIDSPOT = process.env.CLIENTIDSPOT || require('./oauth.js').spotify.clientID;
 var CLIENTSECRETSPOT = process.env.CLIENTSECRETSPOT || require('./oauth.js').spotify.clientSecret;
 var CALLBACKURLSPOT = process.env.CALLBACKURLSPOT || require('./oauth.js').spotify.callbackURL;
@@ -33,23 +33,12 @@ var SOUNDCLOUDCLIENTURL = process.env.SOUNDCLOUDCLIENTURL || require('./oauth.js
 mongoose.connect(mongoURI);
 
 passport.serializeUser(function(user, done) {
+  console.log(user);
 done(null, user);
 });
 passport.deserializeUser(function(obj, done) {
 done(null, obj);
 });
-
-// passport.use(new FacebookStrategy({
-//  clientID: CLIENTIDFB,
-//  clientSecret: CLIENTSECRETFB,
-//  callbackURL: CALLBACKURLFB
-// }, 
-// function(accessToken, refreshToken, profile, done) {
-//  process.nextTick(function () {
-//    return done(null, profile);
-//  });
-// }
-// ));
 
 passport.use(new SpotifyStrategy({
     clientID: CLIENTIDSPOT,
@@ -62,7 +51,7 @@ passport.use(new SpotifyStrategy({
     console.log(profile.displayName)
     User.findOne({ spotifyId: profile.id }, function (err, user) {
       if (user) { 
-        user.token = accessToken
+        user.lastToken = accessToken;
         return done(err, user); 
       } else {
         var newUser = User({PHRname: profile.displayName , scId:'', spotifyId: profile.id, liked: [], upvotes: [], comments: [], playlists: [] })
@@ -71,7 +60,7 @@ passport.use(new SpotifyStrategy({
               console.log('cant save new user');
               res.status(500);
           } else {
-            user.token = accessToken
+            user.lastToken = accessToken;
             return done(err, user);
           }
         });
@@ -80,28 +69,6 @@ passport.use(new SpotifyStrategy({
   }
 ));
 
-// passport.use(new SoundCloudStrategy({
-//     clientID: SOUNDCLOUD_CLIENT_ID,
-//     clientSecret: SOUNDCLOUD_CLIENT_SECRET,
-//     callbackURL: SOUNDCLOUDCLIENTURL
-//   },
-//   function(accessToken, refreshToken, profile, done) {
-//     // process.nextTick(function (err, user) {
-//     //   return done(err, user);
-//     console.log(profile.displayName)
-//     User.findOne({ PHRname: profile.displayName }, function (err, user) {
-//       if (user) { 
-//         if (user.scId){
-//           return done(err, user); 
-//         } else {
-//           user.scId = profile.id;
-//           user.save();
-//           return done(err, user);
-//         }
-//       } 
-//     });
-//   }
-// ));
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -117,25 +84,31 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
+// Main route
 app.get('/', index.indexRender);
-// app.get('/auth/facebook', passport.authenticate('facebook'), auth.fbAuth);
-// app.get('/auth/facebook/callback',passport.authenticate('facebook', { failureRedirect: '/' }), auth.fbAuthCallback);
+
 app.get('/auth/spotify', passport.authenticate('spotify', {scope: ['user-read-email', 'user-read-private'] }), auth.fbAuth);
 app.get('/auth/spotify/callback',passport.authenticate('spotify', { scope: ['user-read-email', 'user-read-private'], failureRedirect: '/' }), auth.spotAuthCallback);
-// app.get('/auth/soundcloud', passport.authenticate('soundcloud'));
-// app.get('/auth/soundcloud/callback', 
-//   passport.authenticate('soundcloud', { failureRedirect: '/login' }),
-//   function(req, res) {
-//     res.redirect('/');
-//   });
+
 app.get('/session/username', auth.getUsername);
 app.post('/session/end', auth.loggingOut);
 app.get('/user/:username', profile.getData);
+
 //for testing only
 app.get('/secret/secret', function(req, res){
   res.send({secret: SOUNDCLOUD_CLIENT_ID})
 });
 
+
+// API routes
+app.get('/api/playlists', playlists.allPlaylists);
+app.get('/api/playlists/by/upvote', playlists.byUpvotes);
+app.post('/api/playlists/add', playlists.addPlaylist);
+app.post('/api/upvote', playlists.upvote);
+
+
 app.listen(PORT, function() {
   console.log("Application running on port:", PORT);
 });
+
+
