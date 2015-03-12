@@ -4,7 +4,7 @@
 			<li ng-show="nav.checkHome()"><a class="button" href="/">Home</a></li>
 			<li ng-show="nav.username"><button ng-click="nav.eatCookie()">Logout</button></li>
 			<li ng-hide="nav.username"><a class="button" href="/auth/spotify" target="_self">Login</a></li>
-			<li ng-hide="nav.soundcloud"><a class="button" href="/auth/soundcloud" target="_self">SoundCloud</a></li>
+			<!-- <li ng-hide="nav.soundcloud"><a class="button" href="/auth/soundcloud" target="_self">SoundCloud</a></li> -->
 		</ul>
 	    <ul class="right">
 	      <li ng-show="nav.username"><a class="button" href="{{'/user/' + nav.username}}">{{nav.username}}</a></li>

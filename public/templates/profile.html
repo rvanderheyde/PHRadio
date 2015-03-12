@@ -2,7 +2,7 @@
 	<ul>
 		<h3>Playlists</h3>
 		<li ng-repeat="playlist in userCtrl.playlists">
-			<a class="button small" href="">{{playlist.title}}</a>
+			<a class="button small" href="">{{playlist.name}}</a>
 			<ul>
 				<li ng-repeat="song in playlist.content">
 					<p>{{song}}</p>

@@ -7,27 +7,19 @@
 			templateUrl: '../templates/nav.html',
 			controller: function(){
 				var user = this;
-				this.username = $cookieStore.get('PHRname');
-				if (this.username){
-					this.soundcloud = $cookieStore.get('scId');
-				} else {
-					this.soundcloud = true;
-				}
-				console.log(this.username, this.soundcloud)
+				this.username = $cookieStore.get('username');
+				
+				// console.log(this.username);
 
 				$http.get('/session/username').success(function(data){
 					//bake the cookie with username from server to control view.
-					if (data !== 'error'){
+					if (data !== 'No User'){
 						console.log(data)
 						var username = data.userName;
-						var soundcloud = data.soundcloud;
-						$cookieStore.put('PHRname', username);
-						$cookieStore.put('scId', soundcloud)
+						$cookieStore.put('username', username);
 						user.username = username;
-						user.soundcloud = soundcloud;
-						if (user.soundcloud == ''){
-							user.soundcloud = false;
-						}
+					} else {
+						user.username = '';
 					}
 				}).error(function(data){
 					alert(data);	
@@ -45,13 +37,11 @@
 
 				this.eatCookie = function(){
 					//eat the cookie!!(destroys it)
-					var username = $cookieStore.get('PHRname');
+					var username = $cookieStore.get('username');
 					$http.post('/session/end').success(function(data, status, headers, config){
 						console.log(username);
-						$cookieStore.remove('PHRname');
-						$cookieStore.remove('scId');
+						$cookieStore.remove('username');
 						user.username = '';
-						user.soundcloud = true;
 					}).error(function(data,status,headers,config){
 						alert("There was an err loggin out")
 					})

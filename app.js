@@ -39,17 +39,17 @@ passport.deserializeUser(function(obj, done) {
 done(null, obj);
 });
 
-passport.use(new FacebookStrategy({
- clientID: CLIENTIDFB,
- clientSecret: CLIENTSECRETFB,
- callbackURL: CALLBACKURLFB
-}, 
-function(accessToken, refreshToken, profile, done) {
- process.nextTick(function () {
-   return done(null, profile);
- });
-}
-));
+// passport.use(new FacebookStrategy({
+//  clientID: CLIENTIDFB,
+//  clientSecret: CLIENTSECRETFB,
+//  callbackURL: CALLBACKURLFB
+// }, 
+// function(accessToken, refreshToken, profile, done) {
+//  process.nextTick(function () {
+//    return done(null, profile);
+//  });
+// }
+// ));
 
 passport.use(new SpotifyStrategy({
     clientID: CLIENTIDSPOT,
@@ -62,6 +62,7 @@ passport.use(new SpotifyStrategy({
     console.log(profile.displayName)
     User.findOne({ spotifyId: profile.id }, function (err, user) {
       if (user) { 
+        user.token = accessToken
         return done(err, user); 
       } else {
         var newUser = User({PHRname: profile.displayName , scId:'', spotifyId: profile.id, liked: [], upvotes: [], comments: [], playlists: [] })
@@ -70,6 +71,7 @@ passport.use(new SpotifyStrategy({
               console.log('cant save new user');
               res.status(500);
           } else {
+            user.token = accessToken
             return done(err, user);
           }
         });
@@ -78,28 +80,28 @@ passport.use(new SpotifyStrategy({
   }
 ));
 
-passport.use(new SoundCloudStrategy({
-    clientID: SOUNDCLOUD_CLIENT_ID,
-    clientSecret: SOUNDCLOUD_CLIENT_SECRET,
-    callbackURL: SOUNDCLOUDCLIENTURL
-  },
-  function(accessToken, refreshToken, profile, done) {
-    // process.nextTick(function (err, user) {
-    //   return done(err, user);
-    console.log(profile.displayName)
-    User.findOne({ PHRname: profile.displayName }, function (err, user) {
-      if (user) { 
-        if (user.scId){
-          return done(err, user); 
-        } else {
-          user.scId = profile.id;
-          user.save();
-          return done(err, user);
-        }
-      } 
-    });
-  }
-));
+// passport.use(new SoundCloudStrategy({
+//     clientID: SOUNDCLOUD_CLIENT_ID,
+//     clientSecret: SOUNDCLOUD_CLIENT_SECRET,
+//     callbackURL: SOUNDCLOUDCLIENTURL
+//   },
+//   function(accessToken, refreshToken, profile, done) {
+//     // process.nextTick(function (err, user) {
+//     //   return done(err, user);
+//     console.log(profile.displayName)
+//     User.findOne({ PHRname: profile.displayName }, function (err, user) {
+//       if (user) { 
+//         if (user.scId){
+//           return done(err, user); 
+//         } else {
+//           user.scId = profile.id;
+//           user.save();
+//           return done(err, user);
+//         }
+//       } 
+//     });
+//   }
+// ));
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -116,16 +118,16 @@ app.use(passport.session());
 
 
 app.get('/', index.indexRender);
-app.get('/auth/facebook', passport.authenticate('facebook'), auth.fbAuth);
-app.get('/auth/facebook/callback',passport.authenticate('facebook', { failureRedirect: '/' }), auth.fbAuthCallback);
+// app.get('/auth/facebook', passport.authenticate('facebook'), auth.fbAuth);
+// app.get('/auth/facebook/callback',passport.authenticate('facebook', { failureRedirect: '/' }), auth.fbAuthCallback);
 app.get('/auth/spotify', passport.authenticate('spotify', {scope: ['user-read-email', 'user-read-private'] }), auth.fbAuth);
 app.get('/auth/spotify/callback',passport.authenticate('spotify', { scope: ['user-read-email', 'user-read-private'], failureRedirect: '/' }), auth.spotAuthCallback);
-app.get('/auth/soundcloud', passport.authenticate('soundcloud'));
-app.get('/auth/soundcloud/callback', 
-  passport.authenticate('soundcloud', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/');
-  });
+// app.get('/auth/soundcloud', passport.authenticate('soundcloud'));
+// app.get('/auth/soundcloud/callback', 
+//   passport.authenticate('soundcloud', { failureRedirect: '/login' }),
+//   function(req, res) {
+//     res.redirect('/');
+//   });
 app.get('/session/username', auth.getUsername);
 app.post('/session/end', auth.loggingOut);
 app.get('/user/:username', profile.getData);
