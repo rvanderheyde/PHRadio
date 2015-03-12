@@ -19,6 +19,9 @@
     .when('/by/upvote', {
       templateUrl: '/../templates/byupvotes.html',
       controller: 'ByUpvotesController'  
+    }).when('/playlist/:playlistId', {
+      templateUrl: '../templates/playlist.html',
+      controller: 'PlaylistController'
     }).otherwise({
       templateUrl: '../templates/404.html',
       controller: 'soundTest',
@@ -32,6 +35,31 @@
     });
   }]);  
 
+
+  app.controller('PlaylistController', ['$http','$location', function($http, $location){
+    var page = this;
+    var path = $location.path();
+    $http.get(path).success(function(data,status){
+      page.songs = data;
+    }).error(function(data,status){ console.log(status); })
+
+    this.startPlaylist = function(songName){
+      var time = new Date();
+      var secsI = time.getSeconds();
+      this.secs = 0;
+      while (true){
+        if (this.secs>60){
+          page.songs.songName = true;
+        }
+        var secs = time.getSeconds();
+        if(secs-secsI>0){
+          this.secs = secs-secsI;
+        } else {
+          this.secs = 60+secs-secsI;
+        } 
+      }
+    };
+  }])
   //Controller for the profile page
   app.controller('UserController', ['$http','$location', function($http, $location){
     var stuff = this;
