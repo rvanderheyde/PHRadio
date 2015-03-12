@@ -49,7 +49,7 @@
       this.secs = 0;
       while (true){
         if (this.secs>60){
-          page.songs.songName = true;
+          page.songs.songName.appear = false;
         }
         var secs = time.getSeconds();
         if(secs-secsI>0){

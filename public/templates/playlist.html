@@ -1,3 +1,11 @@
+<iframe ng-click="startPlayist()" src="https://embed.spotify.com/?uri=spotify:track:5JunxkcjfCYcY7xJ29tLai" frameborder="0" allowtransparency="true"></iframe>
+<iframe src="https://embed.spotify.com/?uri=spotify:track:4th1RQAelzqgY7wL53UGQt" frameborder="0" allowtransparency="true"></iframe>
 
-	<iframe src="https://embed.spotify.com/?uri=spotify:track:5JunxkcjfCYcY7xJ29tLai" frameborder="0" allowtransparency="true"></iframe>
-	<iframe src="https://embed.spotify.com/?uri=spotify:track:4th1RQAelzqgY7wL53UGQt" frameborder="0" allowtransparency="true"></iframe>
+<div>
+	<ul>
+		<li ng-repeat="song in songs">
+			<iframe  ng-if="song.appear" ng-click="startPlaylist(song.songName)" src="{{'https://embed.spotify.com/?uri=spotify:track:' + song.uri }}"></iframe>
+		</li>
+	</ul>
+
+</div>
