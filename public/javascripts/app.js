@@ -77,6 +77,18 @@
     // Message for the user
     $scope.msg = "";
 
+    var user_id = 'wizzler';
+
+    $http.get('https://api.spotify.com/v1/me')
+      .success( function(data) {
+        $scope.msg = "Your public playlists: ";
+        $scope.userPlaylists = data;
+      })
+      .error( function (data) {
+        console.log("Error: " + data);
+        $scope.msg = "Couldn't get the current user's public playlists";
+      });
+
     // Add the playlist to the db
     $scope.addPlaylist = function () {
 
@@ -94,6 +106,7 @@
   });
 
   app.controller('ByUpvotesController', function ($scope, $http) {
+    // Get the playlists sorted by the number of upvotes 
     $http.get('/api/playlists/by/upvote')
     .success( function (data) {
       $scope.playlists = data;
