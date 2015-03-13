@@ -102,6 +102,7 @@ app.get('/secret/secret', function(req, res){
 
 // API routes
 app.get('/api/playlists', playlists.allPlaylists);
+app.post('/api/playlists', playlists.postPlaylists);
 app.get('/api/playlists/by/upvote', playlists.byUpvotes);
 app.post('/api/playlists/add', playlists.addPlaylist);
 app.post('/api/upvote', playlists.upvote);

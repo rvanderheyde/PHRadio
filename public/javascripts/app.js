@@ -19,9 +19,10 @@
     .when('/by/upvote', {
       templateUrl: '/../templates/byupvotes.html',
       controller: 'ByUpvotesController'  
-    }).when('/playlist/:playlistId', {
-      templateUrl: '../templates/playlist.html',
-      controller: 'PlaylistController'
+    }).when('/user/:userId/playlist/:playlistId', {
+      templateUrl: '../../../templates/playlist.html',
+      controller: 'PlaylistController',
+      controllerAs: 'PlaylistCtrl'
     }).otherwise({
       templateUrl: '../templates/404.html',
       controller: 'soundTest',
@@ -36,13 +37,20 @@
   }]);  
 
 
-  app.controller('PlaylistController', ['$http','$location', function($http, $location){
+  app.controller('PlaylistController', ['$http','$location','$sce', function($http, $location,$sce){
     var page = this;
     var path = $location.path();
-    $http.get(path).success(function(data,status){
-      page.songs = data;
-    }).error(function(data,status){ console.log(status); })
-
+    var splitString = path.split('/')
+    var userId = splitString[2];
+    var playlistId = splitString[4];
+    this.url='https://embed.spotify.com/?uri=spotify:user:'+userId+':playlist:'+playlistId;
+    this.trustSrc = function(src) {
+      return $sce.trustAsResourceUrl(src);
+    }
+    this.secs = 0;
+    // $http.get(path).success(function(data,status){
+    //   page.songs = data;
+    // }).error(function(data,status){ console.log(status); })
     this.startPlaylist = function(songName){
       var time = new Date();
       var secsI = time.getSeconds();
@@ -67,6 +75,7 @@
     var path = $location.path();
     //get the data to populate the page
     $http.get(path).success(function(data, status){
+      stuff.id = data.spotifyId;
       console.log(data);
         var url = "https://api.spotify.com/v1/users/" + data.spotifyId +"/playlists";
         var req = {
@@ -80,9 +89,12 @@
         $http(req).success(function( obj, status){
           var playlists = obj.items;
           stuff.page = data;
-          stuff.page.playlists = playlists;
+          stuff.page.playlistsSpot = playlists;
           
-          console.log(stuff.page.playlists)
+          console.log(stuff.page.playlistsSpot)
+          $http.post('/api/playlists', {playlistsSpot: stuff.page.playlistsSpot}).success(function(obj,status){
+            stuff.page.playlists = obj;
+          })
         }).error(function(data, status){ console.log(status); }) 
     }).error(function(data, status){ console.log(status); });
   }]);
@@ -112,9 +124,11 @@
     // Get all of the playlists in the db sorted by date added
     $http.get('/api/playlists')
       .success(function (data){
-      $scope.firstplaylist = data[0].title;
-      $scope.playlists = data;
-      console.log("The name is " + $scope.firstplaylist);
+        if(data[0]){
+          $scope.firstplaylist = data[0].title;
+          $scope.playlists = data;
+          console.log("The name is " + $scope.firstplaylist);
+        }
       })
       .error(function (data) {
       console.log("Error: " + data);

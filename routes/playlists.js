@@ -3,6 +3,28 @@ routes = {};
 var Playlist = require('../models/playlists');
 var User = require('../models/user');
 
+routes.postPlaylists = function(req, res){
+	var playlistSpot = req.body.playlistSpot; 
+	if (req.user){
+		User.find({PHRname: req.user.PHRname}, function(err, user){
+			if(err){
+				console.error("User not found", err)
+			}
+			Playlist.find({_author: user._id}, function(err, playlists){
+				if (playlists){
+					res.send(playlists);
+				} else {
+					for(var i=0; i<playlistSpot.length; i++){
+						var newPlaylist = new Playlist({playlistId: playlistSpot[i].id, upvotes: 0, dateAdded: new Date(), img: playlistSpot[i].images, title: playlistSpot[i].name, _author: _user._id})
+						newPlaylist.save()
+					}
+					res.send(playlistSpot);
+				}
+			})
+		})
+	}
+};
+
 routes.allPlaylists = function (req, res) {
 	if (req.user) {
 		console.log(req.user);

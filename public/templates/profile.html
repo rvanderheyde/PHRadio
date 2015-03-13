@@ -1,13 +1,19 @@
 <div class="no-bullet">
 	<ul>
-		<h3>Playlists</h3>
-		<li ng-repeat="playlist in userCtrl.playlists">
-			<a class="button small" href="">{{playlist.name}}</a>
-			<ul>
+		<h3>Playlists from Spotify</h3>
+		<li ng-repeat="playlist in userCtrl.page.playlistsSpot">
+			<a class="button small" href="{{'/user/' + userCtrl.id +'/playlist/' + playlist.id}}">{{playlist.name}}</a>
+			<!-- <ul>
 				<li ng-repeat="song in playlist.content">
 					<p>{{song}}</p>
 				</li>
-			</ul>
+			</ul> -->
+		</li>
+	</ul>
+	<ul>
+		<h3>Imported Playlists</h3>
+		<li ng-repeat="playlist in userCtrl.page.playlists">
+			<a class="button small" href="">{{playlist.name}}</a>
 		</li>
 	</ul>
 </div>
