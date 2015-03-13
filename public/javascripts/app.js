@@ -81,6 +81,7 @@
           var playlists = obj.items;
           stuff.page = data;
           stuff.page.playlists = playlists;
+          
           console.log(stuff.page.playlists)
         }).error(function(data, status){ console.log(status); }) 
     }).error(function(data, status){ console.log(status); });
