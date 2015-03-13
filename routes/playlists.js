@@ -77,7 +77,7 @@ routes.addPlaylist = function (req, res) {
 	// Only allow playlist uploads if user is logged in
 	if (req.user) {
 		// Get user id
-		var authorId = req.user._id;
+		var authorId = req.user.spotifyId;
 
 		var title = req.body.title;
 		var playlistId = req.body.playlistId;

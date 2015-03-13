@@ -17,6 +17,7 @@
 						console.log(data)
 						var username = data.userName;
 						$cookieStore.put('username', username);
+						$cookieStore.put('spoifyId', data.spotId)
 						user.username = username;
 					} else {
 						user.username = '';

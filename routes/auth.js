@@ -40,7 +40,7 @@ routes.getUsername = function(req, res){
     res.send('No User');
   } else {
     var username = req.user.PHRname;
-    var obj = { userName: username};
+    var obj = { userName: username, spotId: req.user.spotifyId};
     if (!username){
       res.send('No User');
     } else {

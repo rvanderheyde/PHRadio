@@ -5,6 +5,7 @@ Sort by: <a href="/#/">Date</a> <a href="/#/by/upvote">Popularity</a>
         	{{playlist.title}} by {{playlist._author}}
         	Upvotes: {{playlist.upvotes}} ID: {{playlist.playlistId}}
        <br>
+       	<iframe ng-src="{{HomeController.trustSrc('https://embed.spotify.com/?uri=spotify:user:'+userId+':playlist:'+playlist.playlistId)}}" frameborder="0" allowtransparency="true"></iframe>
        <button type = "submit" ng-click="addUpvote(playlist)">Upvote</button>
 
 	</div>

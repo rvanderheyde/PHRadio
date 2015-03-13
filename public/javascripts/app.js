@@ -37,7 +37,7 @@
   }]);  
 
 
-  app.controller('PlaylistController', ['$http','$location','$sce', function($http, $location,$sce){
+  app.controller('PlaylistController', ['$http','$location','$sce', function($http, $location, $sce){
     var page = this;
     var path = $location.path();
     var splitString = path.split('/')
@@ -48,6 +48,11 @@
       return $sce.trustAsResourceUrl(src);
     }
     this.secs = 0;
+    // $http.get('/user/'+splitString[2]).success(function(data){
+
+    //   $http.post('/api/playlists/add', {playlistId: playlistId, title: })
+    // })
+    
     // $http.get(path).success(function(data,status){
     //   page.songs = data;
     // }).error(function(data,status){ console.log(status); })
@@ -92,9 +97,6 @@
           stuff.page.playlistsSpot = playlists;
           
           console.log(stuff.page.playlistsSpot)
-          $http.post('/api/playlists', {playlistsSpot: stuff.page.playlistsSpot}).success(function(obj,status){
-            stuff.page.playlists = obj;
-          })
         }).error(function(data, status){ console.log(status); }) 
     }).error(function(data, status){ console.log(status); });
   }]);
@@ -120,7 +122,10 @@
   }]);
 
   app.controller('HomeController', function ($scope, $http) {
-    
+    $scope.userId = $cookieStore.get('spotifyId')
+    this.trustSrc = function(src) {
+      return $sce.trustAsResourceUrl(src);
+    }
     // Get all of the playlists in the db sorted by date added
     $http.get('/api/playlists')
       .success(function (data){
