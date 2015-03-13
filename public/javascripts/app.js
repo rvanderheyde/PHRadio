@@ -128,7 +128,7 @@
   }]);
 
   app.controller('HomeController', function ($cookieStore ,$scope, $http) {
-    $scope.userId = $cookieStore.get('spotifyId')
+    var userId = $cookieStore.get('spotifyId')
     this.trustSrc = function(src) {
       return $sce.trustAsResourceUrl(src);
     }
@@ -138,6 +138,9 @@
         if(data[0]){
           $scope.firstplaylist = data[0].title;
           $scope.playlists = data;
+          for(var i=0; i<data.length; i++){
+            $scope.playlists[i].SpotURL='https://embed.spotify.com/?uri=spotify:user:'+userId+':playlist:'+data[i].playlistId
+          }
           console.log("The name is " + $scope.firstplaylist);
         }
       })
