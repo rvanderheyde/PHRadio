@@ -3,6 +3,7 @@
 		<h3>Playlists from Spotify</h3>
 		<li ng-repeat="playlist in userCtrl.page.playlistsSpot">
 			<a class="button small" href="{{'/user/' + userCtrl.id +'/playlist/' + playlist.id}}">{{playlist.name}}</a>
+			<button ng-click="userCtrl.addPlaylist(playlist)"></button>
 			<!-- <ul>
 				<li ng-repeat="song in playlist.content">
 					<p>{{song}}</p>

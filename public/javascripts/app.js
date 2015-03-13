@@ -99,6 +99,12 @@
           console.log(stuff.page.playlistsSpot)
         }).error(function(data, status){ console.log(status); }) 
     }).error(function(data, status){ console.log(status); });
+
+    this.addPlaylist = function(playlist){
+      $http.post('/api/playlists/add',{playlistId: playlist.id, title: playlist.name}).success(function(data){
+        console.log('success')
+      })
+    };
   }]);
 
   app.controller('soundTest', ['$http', '$sce', function($http, $sce){
@@ -121,7 +127,7 @@
       
   }]);
 
-  app.controller('HomeController', function ($scope, $http) {
+  app.controller('HomeController', function ($cookieStore ,$scope, $http) {
     $scope.userId = $cookieStore.get('spotifyId')
     this.trustSrc = function(src) {
       return $sce.trustAsResourceUrl(src);

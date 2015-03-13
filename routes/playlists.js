@@ -77,7 +77,7 @@ routes.addPlaylist = function (req, res) {
 	// Only allow playlist uploads if user is logged in
 	if (req.user) {
 		// Get user id
-		var authorId = req.user.spotifyId;
+		var authorId = req.user._id;
 
 		var title = req.body.title;
 		var playlistId = req.body.playlistId;
@@ -85,18 +85,25 @@ routes.addPlaylist = function (req, res) {
 		var upvotes = 0;
 
 		// Create new playlist object
-		var newPlaylist = new Playlist({title: title, _author: authorId, playlistId: playlistId, 
-		dateAdded: dateAdded, upvotes: upvotes});
-
-		// Add new playlist to db
-		newPlaylist.save(function (err, playlist) {
-			if (err) {
-				console.error("Couldn't save new playlist ", err);
-				res.status(500).send("Couldn't save the new playlist!");
-			};
-			// Send the new playlist object
-			res.send(playlist);
-		});
+		Playlist.findOne({playlistId: playlistId}, function(err, playlist){
+			if (playlist){
+				res.send(playlist)
+			} else {
+				var newPlaylist = new Playlist({title: title, _author: authorId, playlistId: playlistId, 
+				dateAdded: dateAdded, upvotes: upvotes});
+				console.log(newPlaylist)
+				// Add new playlist to db
+				newPlaylist.save(function (err, playlist) {
+					if (err) {
+						console.error("Couldn't save new playlist ", err);
+						res.status(500).send("Couldn't save the new playlist!");
+					};
+					// Send the new playlist object
+					res.send(playlist);
+				});
+			}
+		})
+		
 	};
 };
 
