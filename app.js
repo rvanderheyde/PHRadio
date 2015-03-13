@@ -26,9 +26,7 @@ var PORT = process.env.PORT || 3000;
 var CLIENTIDSPOT = process.env.CLIENTIDSPOT || require('./oauth.js').spotify.clientID;
 var CLIENTSECRETSPOT = process.env.CLIENTSECRETSPOT || require('./oauth.js').spotify.clientSecret;
 var CALLBACKURLSPOT = process.env.CALLBACKURLSPOT || require('./oauth.js').spotify.callbackURL;
-var SOUNDCLOUD_CLIENT_ID = process.env.SOUNDCLOUD_CLIENT_ID || require('./oauth.js').soundcloud.clientID;
-var SOUNDCLOUD_CLIENT_SECRET = process.env.SOUNDCLOUD_CLIENT_SECRET || require('./oauth.js').soundcloud.clientSecret;
-var SOUNDCLOUDCLIENTURL = process.env.SOUNDCLOUDCLIENTURL || require('./oauth.js').soundcloud.callbackURL;
+
  
 mongoose.connect(mongoURI);
 
